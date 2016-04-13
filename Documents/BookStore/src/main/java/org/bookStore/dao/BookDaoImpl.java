@@ -13,18 +13,21 @@ public class BookDaoImpl implements BookDao {
     private EntityManager entityManager;
 
     public List<BookEntity> getBooks() {
-        String sql = String.format("SELECT b FROM BookEntity b");
+
+        String sql = "SELECT b FROM BookEntity b";
 
         TypedQuery<BookEntity> query  = entityManager.createQuery(sql, BookEntity.class);
         return query.getResultList();
     }
 
     public void deleteBook(long id) {
+
         BookEntity podcast = entityManager.find(BookEntity.class, id);
         entityManager.remove(podcast);
     }
 
     public BookEntity getBookById(Long id){
+
         BookEntity result = null;
         try {
             String qlString = "SELECT p FROM BookEntity p WHERE p.id = ?1";
@@ -38,11 +41,14 @@ public class BookDaoImpl implements BookDao {
         return result;
     }
 
+
     public long createBook(BookEntity bookEntity) {
 
         bookEntity.setWrittenDate(new Date());
-        entityManager.merge(bookEntity);
-        entityManager.flush();
+      //  entityManager.merge(bookEntity);
+       entityManager.persist(bookEntity);
+
+
         return bookEntity.getId();
     }
 

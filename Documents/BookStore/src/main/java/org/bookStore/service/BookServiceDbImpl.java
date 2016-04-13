@@ -17,11 +17,12 @@ import java.util.List;
 public class BookServiceDbImpl implements BookService {
 
     @Autowired
-    BookDao BookDao;
+    BookDao bookDao;
 
+    @Transactional("transactionManager")
     public Long createBook(Book book) {
 
-       return BookDao.createBook(new BookEntity(book));
+       return bookDao.createBook(new BookEntity(book));
     }
 
     @Transactional("transactionManager")
@@ -33,11 +34,11 @@ public class BookServiceDbImpl implements BookService {
 
     public List<Book> getBooks() throws AppException {
 
-        return getBooksFromEntities( BookDao.getBooks());
+        return getBooksFromEntities( bookDao.getBooks());
     }
 
     public Book getBookById(Long id) throws AppException {
-        BookEntity bookId = BookDao.getBookById(id);
+        BookEntity bookId = bookDao.getBookById(id);
         if(bookId == null){
             throw new AppException(Response.Status.NOT_FOUND.getStatusCode(),
                     404,
@@ -45,7 +46,7 @@ public class BookServiceDbImpl implements BookService {
                     "Verify the existence of the podcast with the id " + id + " in the database","");
         }
 
-        return new Book(BookDao.getBookById(id));
+        return new Book(bookDao.getBookById(id));
     }
 
     @Transactional("transactionManager")
@@ -67,25 +68,25 @@ public class BookServiceDbImpl implements BookService {
                     "");
         }
 
-        BookDao.updateBook(new BookEntity(book));
+        bookDao.updateBook(new BookEntity(book));
     }
 
     @Transactional("transactionManager")
     public void deleteBookById(Long id) {
 
-        BookDao.deleteBook(id);
+        bookDao.deleteBook(id);
     }
 
     @Transactional("transactionManager")
     public void deleteBooks() {
 
-        BookDao.deleteBooks();
+        bookDao.deleteBooks();
     }
 
     public Book verifyBookExistenceById(Long id) {
 
             Book result = null;
-            BookEntity bookById = BookDao.getBookById(id);
+            BookEntity bookById = bookDao.getBookById(id);
 
             if(bookById != null){
                 result = new Book(bookById);

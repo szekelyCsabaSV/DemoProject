@@ -34,9 +34,17 @@ public class BookResource {
                                 + String.valueOf(createPodcastId)).build();
     }
 
+    @POST
+    @Path("list")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    public Response createPodcasts(List<Book> books) throws AppException {
+        bookService.createboks(books);
+        return Response.status(Response.Status.CREATED)
+                .entity("List of books was successfully created").build();
+    }
+
 
     @GET
-    //@Compress //can be used only if you want to SELECTIVELY enable compression at the method level. By using the EncodingFilter everything is compressed now.
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public List<Book> getPodcasts(
             @QueryParam("orderByInsertionDate") String orderByInsertionDate,
@@ -58,5 +66,48 @@ public class BookResource {
                 .allow("OPTIONS").build();
     }
 
+
+    @PUT
+    @Path("{id}")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.TEXT_HTML })
+    public Response putBookById(@PathParam("id") Long id, Book book)
+            throws AppException {
+
+        Book bookById = bookService.verifyBookExistenceById(id);
+
+        if (bookById == null) {
+            // resource not existent yet, and should be created under the
+            // specified URI
+            Long createPodcastId = bookService.createBook(book);
+            return Response
+                    .status(Response.Status.CREATED)
+                    // 201
+                    .entity("A new book has been created AT THE LOCATION you specified")
+                    .header("Location",
+                            "http://localhost:8888/demo-rest-jersey-spring/books/"
+                                    + String.valueOf(createPodcastId)).build();
+        } else {
+            // resource is existent and a full update should occur
+            bookService.updateFullyBook(book);
+            return Response
+                    .status(Response.Status.OK)
+                    // 200
+                    .entity("The book you specified has been fully updated created AT THE LOCATION you specified")
+                    .header("Location",
+                            "http://localhost:8888/demo-rest-jersey-spring/books/"
+                                    + String.valueOf(id)).build();
+        }
+    }
+
+    @DELETE
+    @Path("{id}")
+    @Produces({ MediaType.TEXT_HTML })
+    public Response deletePodcastById(@PathParam("id") Long id) {
+        bookService.deleteBookById(id);
+
+        return Response.status(Response.Status.NO_CONTENT)// 204
+                .entity("Podcast successfully removed from database").build();
+    }
 
 }

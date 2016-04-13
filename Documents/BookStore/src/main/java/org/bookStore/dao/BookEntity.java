@@ -17,7 +17,7 @@ import java.util.Date;
 public class BookEntity implements Serializable {
 
     @Id
-    @GeneratedValue()
+    @GeneratedValue
     @Column(name="id")
     private Long id;
 
@@ -32,9 +32,8 @@ public class BookEntity implements Serializable {
 
     public BookEntity(){}
 
-    public BookEntity(long id, String title, String description, Date writtenDate){
+    public BookEntity( String title, String description, Date writtenDate){
 
-        this.id = id;
         this.title = title;
         this.description = description;
         this.writtenDate = writtenDate;
@@ -53,34 +52,42 @@ public class BookEntity implements Serializable {
     }
 
     public Long getId() {
+
         return id;
     }
 
     public void setId(Long id) {
+
         this.id = id;
     }
 
     public String getTitle() {
+
         return title;
     }
 
     public void setTitle(String title) {
+
         this.title = title;
     }
 
     public String getDescription() {
+
         return description;
     }
 
     public void setDescription(String description) {
+
         this.description = description;
     }
 
     public Date getWrittenDate() {
+
         return writtenDate;
     }
 
     public void setWrittenDate(Date writtenDate) {
+
         this.writtenDate = writtenDate;
     }
 }
