@@ -47,7 +47,7 @@
       <url-pattern>/manifest/*</url-pattern>
     </filter-mapping>
 
-	<resource-ref id="bookstoreDB">
+	<resource-ref book_id="bookstoreDB">
         <description>Database resource for rest demo web application </description>
         <res-ref-name>jdbc/bookstoreDB</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>

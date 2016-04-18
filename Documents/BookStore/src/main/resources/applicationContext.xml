@@ -32,12 +32,15 @@
                 <property name="databasePlatform" value="org.hibernate.dialect.MySQLDialect" />
             </bean>
         </property>
-    </bean>     
+    </bean>
 
-    	
-	<bean id="BookDao" class="org.bookStore.dao.BookDaoImpl"/>
+    <bean id="BookDao" class="org.bookStore.dao.BookDaoImpl"/>
     <bean id="BookService" class="org.bookStore.service.BookServiceDbImpl" />
     <bean id="BookResource" class="org.bookStore.Resource.BookResource" />
+
+    <bean id="AuthorDao" class="org.bookStore.dao.AuthorDaoImpl"/>
+    <bean id="AuthorService" class="org.bookStore.service.AuthorServicDdImpl" />
+    <bean id="AuthorResource" class="org.bookStore.Resource.AuthorResource" />
 
 
 	<bean id="bookstoreDS" class="org.springframework.jndi.JndiObjectFactoryBean" scope="singleton">

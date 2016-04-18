@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,20 +27,23 @@ public class BookResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.TEXT_HTML })
     public Response createBook(Book book) throws AppException {
-        Long createPodcastId = bookService.createBook(book);
 
-        return Response.status(Response.Status.CREATED)// 201
+        Long createBookId = bookService.createBook(book);
+
+        return Response.status(Response.Status.CREATED)
                 .entity("A new book has been created")
                 .header("Location",
                         "http://localhost:8080/BookStore/books/"
-                                + String.valueOf(createPodcastId)).build();
+                                + String.valueOf(createBookId)).build();
     }
 
     @POST
     @Path("list")
     @Consumes({ MediaType.APPLICATION_JSON })
-    public Response createPodcasts(List<Book> books) throws AppException {
+    public Response createBooks(List<Book> books) throws AppException {
+
         bookService.createboks(books);
+
         return Response.status(Response.Status.CREATED)
                 .entity("List of books was successfully created").build();
     }
@@ -46,12 +51,13 @@ public class BookResource {
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-    public List<Book> getPodcasts(
-            @QueryParam("orderByInsertionDate") String orderByInsertionDate,
-            @QueryParam("numberDaysToLookBack") Integer numberDaysToLookBack)
-            throws IOException,	AppException {
-        List<Book> podcasts = bookService.getBooks();
-        return podcasts;
+    public List<Book> getBooks(@QueryParam("title") String title)throws IOException,	AppException {
+        List<Book> result = new ArrayList<Book>();
+
+
+        result = bookService.getBooks(title);
+
+        return result;
     }
 
     @GET
@@ -59,7 +65,9 @@ public class BookResource {
     @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
     public Response getBookById(@PathParam("id") Long id, @QueryParam("detailed") boolean detailed)
             throws IOException,	AppException {
+
         Book bookById = bookService.getBookById(id);
+
         return Response.status(200)
                 .entity(bookById, detailed ? new Annotation[]{BookDetailedView.Factory.get()} : new Annotation[0])
                 .header("Access-Control-Allow-Headers", "X-extra-header")
@@ -77,22 +85,20 @@ public class BookResource {
         Book bookById = bookService.verifyBookExistenceById(id);
 
         if (bookById == null) {
-            // resource not existent yet, and should be created under the
-            // specified URI
+
             Long createPodcastId = bookService.createBook(book);
             return Response
                     .status(Response.Status.CREATED)
-                    // 201
                     .entity("A new book has been created AT THE LOCATION you specified")
                     .header("Location",
                             "http://localhost:8888/demo-rest-jersey-spring/books/"
                                     + String.valueOf(createPodcastId)).build();
         } else {
-            // resource is existent and a full update should occur
+
             bookService.updateFullyBook(book);
+
             return Response
                     .status(Response.Status.OK)
-                    // 200
                     .entity("The book you specified has been fully updated created AT THE LOCATION you specified")
                     .header("Location",
                             "http://localhost:8888/demo-rest-jersey-spring/books/"
@@ -103,11 +109,12 @@ public class BookResource {
     @DELETE
     @Path("{id}")
     @Produces({ MediaType.TEXT_HTML })
-    public Response deletePodcastById(@PathParam("id") Long id) {
+    public Response deleteBookById(@PathParam("id") Long id) {
+
         bookService.deleteBookById(id);
 
-        return Response.status(Response.Status.NO_CONTENT)// 204
-                .entity("Podcast successfully removed from database").build();
+        return Response.status(Response.Status.NO_CONTENT)
+                .entity("Book successfully removed from database").build();
     }
 
 }

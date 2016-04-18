@@ -6,20 +6,21 @@ import org.glassfish.jersey.message.filtering.EntityFiltering;
 import java.lang.annotation.*;
 
 /**
- * Created by csaba.szekely on 4/12/2016.
+ * Created by csaba.szekely on 4/13/2016.
  */
+
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @EntityFiltering
-public @interface BookDetailedView {
+public @interface AuthorDetailedView {
 
-    public static class Factory extends AnnotationLiteral<BookDetailedView> implements BookDetailedView {
+    public static class Factory extends AnnotationLiteral<AuthorDetailedView> implements AuthorDetailedView {
 
         private Factory() {
         }
 
-        public static BookDetailedView get() {
+        public static AuthorDetailedView get() {
             return new Factory();
         }
     }

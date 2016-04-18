@@ -1,7 +1,6 @@
 package org.bookStore.dao;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -12,25 +11,32 @@ public class BookDaoImpl implements BookDao {
     @PersistenceContext(unitName="bookStorePersistence")
     private EntityManager entityManager;
 
-    public List<BookEntity> getBooks() {
+    public List<BookEntity> getBooks(String title) {
 
-        String sql = "SELECT b FROM BookEntity b";
 
-        TypedQuery<BookEntity> query  = entityManager.createQuery(sql, BookEntity.class);
-        return query.getResultList();
+        String qlString = "SELECT b FROM BookEntity b ";
+        if (title !=null){
+            qlString += "where b.title like '%" + title + "%'";
+        }
+        TypedQuery<BookEntity> query = entityManager.createQuery(qlString, BookEntity.class);
+
+        return  query.getResultList();
     }
+
+
 
     public void deleteBook(long id) {
 
-        BookEntity podcast = entityManager.find(BookEntity.class, id);
-        entityManager.remove(podcast);
+        BookEntity bookEntity = entityManager.find(BookEntity.class, id);
+        entityManager.remove(bookEntity);
     }
 
     public BookEntity getBookById(Long id){
 
         BookEntity result = null;
         try {
-            String qlString = "SELECT p FROM BookEntity p WHERE p.id = ?1";
+
+            String qlString = "SELECT p FROM BookEntity p WHERE p.book_id = ?1";
             TypedQuery<BookEntity> query = entityManager.createQuery(qlString, BookEntity.class);
             query.setParameter(1, id);
 
@@ -44,12 +50,7 @@ public class BookDaoImpl implements BookDao {
 
     public long createBook(BookEntity bookEntity) {
 
-        bookEntity.setWrittenDate(new Date());
-      //  entityManager.merge(bookEntity);
-       entityManager.persist(bookEntity);
-
-
-        return bookEntity.getId();
+        return  entityManager.merge(bookEntity).getBook_id();
     }
 
     public void updateBook(BookEntity bookEntity) {
@@ -62,5 +63,6 @@ public class BookDaoImpl implements BookDao {
         Query query = entityManager.createNativeQuery("TRUNCATE TABLE books");
         query.executeUpdate();
     }
+
 
 }

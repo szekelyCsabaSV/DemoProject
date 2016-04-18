@@ -1,17 +1,16 @@
 package org.bookStore.Resource;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.bookStore.dao.AuthorEntity;
 import org.bookStore.dao.BookEntity;
 import org.bookStore.helpers.DateISO8601Adapter;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.beans.BeanUtils;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
+import java.util.*;
 
 /**
  * Created by csaba.szekely on 4/12/2016.
@@ -22,40 +21,61 @@ import java.util.Date;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Book implements Serializable {
 
-    @XmlElement(name = "id")
-    private Long id;
+    private static final long serialVersionUID = -753465561483011877L;
+    @XmlElement(name = "book_id")
+    private Long book_id;
 
     @XmlElement(name = "title")
     private String title;
 
     @XmlElement(name = "description")
-    @BookDetailedView
     private String description;
 
     @XmlElement(name = "writtenDate")
     @XmlJavaTypeAdapter(DateISO8601Adapter.class)
-    @BookDetailedView
     private Date writtenDate;
 
-    public Book(BookEntity bookEntity){
-        try {
-            BeanUtils.copyProperties(this, bookEntity);
-        } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+    private Set<Author> authors = new HashSet<Author>();
+
+    public Set<Author> getAuthors() {
+
+        return authors;
+    }
+
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
+    }
+
+    public Book(BookEntity bookEntity) {
+
+        this.book_id = bookEntity.getBook_id();
+        this.title = bookEntity.getTitle();
+        this.description = bookEntity.getDescription();
+        this.writtenDate = bookEntity.getWrittenDate();
+
+
+        for (AuthorEntity ae : bookEntity.getAuthors()) {
+            this.getAuthors().add(new Author(ae.getAuthor_id(), ae.getName(),ae.getAdress(),ae.getBornDate()));
         }
     }
 
-    public Book(String title, String description){
+    public Book(String title, String description, Date writtenDate) {
 
         this.title = title;
         this.description = description;
+        this.writtenDate = writtenDate;
     }
 
-    public Book(){}
+    public Book(long book_id ,String title, String description, Date writtenDate) {
+
+        this.book_id = book_id;
+        this.title = title;
+        this.description = description;
+        this.writtenDate = writtenDate;
+    }
+
+    public Book() {
+    }
 
     public Date getWrittenDate() {
 
@@ -67,14 +87,14 @@ public class Book implements Serializable {
         this.writtenDate = writtenDate;
     }
 
-    public Long getId() {
+    public Long getBook_id() {
 
-        return id;
+        return book_id;
     }
 
-    public void setId(Long id) {
+    public void setBook_id(Long book_id) {
 
-        this.id = id;
+        this.book_id = book_id;
     }
 
     public String getTitle() {

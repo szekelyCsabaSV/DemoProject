@@ -11,11 +11,19 @@ import java.util.List;
 public interface BookService {
 
     public Long createBook(Book book);
+
     public void createboks(List<Book> books) throws AppException;
-    public List<Book> getBooks() throws AppException;
+
+    public List<Book> getBooks(String title) throws AppException;
+
     public Book getBookById(Long id) throws AppException;
+
     public void updateFullyBook(Book book) throws AppException;
+
     public void deleteBookById(Long id);
+
     public void deleteBooks();
+
     public Book verifyBookExistenceById(Long id);
+
 }

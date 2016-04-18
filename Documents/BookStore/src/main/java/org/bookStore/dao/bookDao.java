@@ -7,10 +7,16 @@ import java.util.List;
  */
 public interface BookDao {
 
-    public List<BookEntity> getBooks();
-    public void deleteBook(long id);
-    public BookEntity getBookById(Long id);
-    public long createBook(BookEntity bookEntity);
-    public void updateBook(BookEntity bookEntity);
+    public List<BookEntity> getBooks(String title);
+
+    public void deleteBook(final long id);
+
+    public BookEntity getBookById(final Long id);
+
+    public long createBook(final BookEntity bookEntity);
+
+    public void updateBook(final BookEntity bookEntity);
+
     public void deleteBooks();
+
 }

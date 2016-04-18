@@ -27,22 +27,24 @@ public class BookServiceDbImpl implements BookService {
 
     @Transactional("transactionManager")
     public void createboks(List<Book> books) throws AppException {
+
         for (Book book : books) {
             createBook(book);
         }
     }
 
-    public List<Book> getBooks() throws AppException {
+    public List<Book> getBooks(String title) throws AppException {
 
-        return getBooksFromEntities( bookDao.getBooks());
+        return getBooksFromEntities( bookDao.getBooks(title));
     }
 
     public Book getBookById(Long id) throws AppException {
+
         BookEntity bookId = bookDao.getBookById(id);
         if(bookId == null){
             throw new AppException(Response.Status.NOT_FOUND.getStatusCode(),
                     404,
-                    "The podcast you requested with id " + id + " was not found in the database",
+                    "The book you requested with id " + id + " was not found in the database",
                     "Verify the existence of the podcast with the id " + id + " in the database","");
         }
 
@@ -51,6 +53,7 @@ public class BookServiceDbImpl implements BookService {
 
     @Transactional("transactionManager")
     public void updateFullyBook(Book book) throws AppException {
+
         if(isFullUpdate(book)){
             throw new AppException(Response.Status.BAD_REQUEST.getStatusCode(),
                     400,
@@ -59,12 +62,12 @@ public class BookServiceDbImpl implements BookService {
                     "");
         }
 
-        Book verifyPodcastExistenceById = verifyBookExistenceById(book.getId());
-        if(verifyPodcastExistenceById == null){
+        Book verifyBooktExistenceById = verifyBookExistenceById(book.getBook_id());
+        if(verifyBooktExistenceById == null){
             throw new AppException(Response.Status.NOT_FOUND.getStatusCode(),
                     404,
                     "The resource you are trying to update does not exist in the database",
-                    "Please verify existence of data in the database for the id - " + book.getId(),
+                    "Please verify existence of data in the database for the id - " + book.getBook_id(),
                     "");
         }
 
@@ -95,7 +98,9 @@ public class BookServiceDbImpl implements BookService {
     }
 
 
+
     private List<Book> getBooksFromEntities(List<BookEntity> bookEntities) {
+
         List<Book> response = new ArrayList<Book>();
 
         for(BookEntity bookEntity : bookEntities){
@@ -106,7 +111,8 @@ public class BookServiceDbImpl implements BookService {
     }
 
     private boolean isFullUpdate(Book book) {
-        return book.getId() == null
+
+        return book.getBook_id() == null
                 || book.getTitle() == null
                 || book.getDescription() == null;
     }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
-    <New id="bookstoreDS" class="org.eclipse.jetty.plus.jndi.Resource">
+    <New book_id="bookstoreDS" class="org.eclipse.jetty.plus.jndi.Resource">
         <Arg></Arg>
         <Arg>jdbc/bookstoreDB</Arg>
         <Arg>
